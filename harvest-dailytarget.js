@@ -25,7 +25,7 @@
 			eta    = new Date((new Date()).getTime() + (delta * 3600000)),
 			etaTxt = eta.getHours() + ':' + (eta.getMinutes() < 10 ? '0' : '') + eta.getMinutes()
 		;
-		div.html('(' + delta.toFixed(2) + ' to ' + etaTxt + ') &nbsp; Total: <span>' + done + '</span>');
+		div.html('(' + delta.toFixed(2) + ' to ' + etaTxt + ') &nbsp; Total: <span>' + done.toFixed(2) + '</span>');
 	};
 	setInterval(update_eta, 2000);
 	input.on('input change', update_eta);
