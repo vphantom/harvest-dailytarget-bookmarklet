@@ -1,8 +1,8 @@
 /**
  * Harvest Daily Target Hours (bookmarklet)
  *
- * Adds number inputs for monthly/daily target hours.
- * Shows hours left this month.
+ * Adds number inputs for weekly/daily target hours.
+ * Updates daily target based on days left and weekly objective.
  * Shows hours left today and ETA near total.
  *
  * @package   harvest-bookmarklet-dailytarget
@@ -14,12 +14,13 @@
 
 	// Create input for target hours
 	$('.timesheet-header .fl-right').prepend(
-		'<B>Targets:</B> '
-		+ ' Month: <input type="number" id="__m_tgt" value="0" min="0" max="744" step="1">'
+		' Week: <input type="number" id="__w_tgt" value="40" min="0" max="168" step="1">'
 		+ ' Daily: <input type="number" id="__d_tgt" value="8.00" min="0" max="24" step="0.01">'
+		+ ' Days/week: <input type="number" id="__w_l" value="5" min="1" max="7" step="1">'
 	);
 	var
-		monthly = $('#__m_tgt'),
+		weekly = $('#__w_tgt'),
+		weekDays = $('#__w_l'),
 		daily = $('#__d_tgt')
 	;
 
@@ -38,15 +39,16 @@
 	setInterval(update_eta, 2000);
 	daily.on('input change', update_eta);
 
-	// Update daily input on monthly input change
+	// Update daily input on weekly input change
 	var update_daily = function () {
 		var
-			monthlyVal    = Number(monthly.val()),
-			now           = new Date(),
-			monthDaysLeft = (new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()) - now.getDate()
+			weeklyVal    = Number(weekly.val()) - Number($('#day-view-week-nav-total .test-week-total').text()) + Number($('.day-view-week-nav .is-today span').text()),
+			now          = new Date(),
+			weekDaysLeft = 1 + Number(weekDays.val()) - now.getDay();
 		;
-		daily.val(Number(monthlyVal / monthDaysLeft).toFixed(2));
+		daily.val(Number(weeklyVal / weekDaysLeft).toFixed(2));
 		update_eta();
 	};
-	monthly.on('input change', update_daily);
+	weekly.on('input change', update_daily);
+	weekDays.on('input change', update_daily);
 })();
