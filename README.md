@@ -2,16 +2,20 @@
 
 [![license](https://img.shields.io/github/license/vphantom/gomisql.svg?style=plastic)]()
 
-Interactive daily target with ETA for Harvest.
+Interactive weekly & daily target with today's ETA for Harvest.
 
-- Adds a numeric input for target hours for the day
-- Adds hours left and ETA (if non-stop until then) near total
+- Adds a numeric input for target hours for the week and day
+- Adds today's hours left and ETA (if working non-stop) near total
+- Calculates daily target based on days left in week and hours left in weekly target
+- Editing the daily target overrides this calculation
 
 [![Screenshot](harvest-dailytarget.png)]()
 
 ## Installation
 
 Create a bookmark and copy and paste the contents of `harvest-dailytarget.url` as its location.
+
+Edit the bookmark itself in order to adjust the weekly target and days per week to your preference.
 
 ## LICENSE AND COPYRIGHT
 

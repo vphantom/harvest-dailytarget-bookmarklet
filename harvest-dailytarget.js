@@ -15,7 +15,7 @@
 	// Create input for target hours
 	$('.timesheet-header .fl-right').prepend(
 		' Week: <input type="number" id="__w_tgt" value="40" min="0" max="168" step="1">'
-		+ ' Daily: <input type="number" id="__d_tgt" value="8.00" min="0" max="24" step="0.01">'
+		+ ' Daily: <input type="number" id="__d_tgt" min="0" max="24" step="0.01">'
 		+ ' Days/week: <input type="number" id="__w_l" value="5" min="1" max="7" step="1">'
 	);
 	var
@@ -49,6 +49,7 @@
 		daily.val(Number(weeklyVal / weekDaysLeft).toFixed(2));
 		update_eta();
 	};
+	update_daily();
 	weekly.on('input change', update_daily);
 	weekDays.on('input change', update_daily);
 })();
