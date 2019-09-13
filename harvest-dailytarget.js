@@ -44,7 +44,7 @@
 		var
 			weeklyVal    = Number(weekly.val()) - Number($('#day-view-week-nav-total .test-week-total').text()) + Number($('.day-view-week-nav .is-today span').text()),
 			now          = new Date(),
-			weekDaysLeft = 1 + Number(weekDays.val()) - now.getDay();
+			weekDaysLeft = 1 + Number(weekDays.val()) - (now.getDay() == 0 ? 7 : now.getDay());
 		;
 		daily.val(Number(weeklyVal / weekDaysLeft).toFixed(2));
 		update_eta();
