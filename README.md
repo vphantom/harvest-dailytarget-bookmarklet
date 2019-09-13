@@ -19,7 +19,7 @@ Edit the bookmark itself in order to adjust the weekly target and days per week 
 
 ## LICENSE AND COPYRIGHT
 
-Copyright (c) 2018 Stéphane Lavergne <https://github.com/vphantom>
+Copyright (c) 2018-2019 Stéphane Lavergne <https://github.com/vphantom>
 
 This program is distributed under the MIT (X11) License:
 http://www.opensource.org/licenses/mit-license.php
