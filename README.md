@@ -5,11 +5,9 @@
 Interactive weekly & daily target with today's ETA for Harvest.
 
 - Adds a numeric input for target hours for the week and day
-- Adds today's hours left and ETA (if working non-stop) near total
+- Adds today's hours left and ETA (if working non-stop)
 - Calculates daily target based on days left in week and hours left in weekly target
 - Editing the daily target overrides this calculation
-
-[![Screenshot](harvest-dailytarget.png)]()
 
 ## Installation
 
@@ -19,7 +17,7 @@ Edit the bookmark itself in order to adjust the weekly target and days per week 
 
 ## LICENSE AND COPYRIGHT
 
-Copyright (c) 2018-2019 Stéphane Lavergne <https://github.com/vphantom>
+Copyright (c) 2018-2020 Stéphane Lavergne <https://github.com/vphantom>
 
 This program is distributed under the MIT (X11) License:
 http://www.opensource.org/licenses/mit-license.php
