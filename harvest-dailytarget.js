@@ -11,14 +11,21 @@
  * @license   https://opensource.org/licenses/MIT  MIT
  */
 (function() {
+	var hours_per_week = 40,
+		days_per_week = 5;
+
 	// Create input for target hours
 	$('.js-timesheet-view')
 		.first()
 		.prepend(
 			'<div style="background:#f8f8f8;border:1px solid #e0e0e0;padding:0.5em;width:fit-content;margin:0 auto 1em auto;"><b style="font-size:150%;margin-right:1em">Targets</b>' +
-				' Week: <input type="number" id="__w_tgt" value="40" min="0" max="168" step="1">' +
+				' Week: <input type="number" id="__w_tgt" value="' +
+				hours_per_week +
+				'" min="0" max="168" step="1">' +
 				' Daily: <input type="number" id="__d_tgt" min="0" max="24" step="0.01">' +
-				' Days/week: <input type="number" id="__w_l" value="5" min="1" max="7" step="1">' +
+				' Days/week: <input type="number" id="__w_l" value="' +
+				days_per_week +
+				'" min="1" max="7" step="1">' +
 				' <b style="font-size:150%;margin-left:1em">ETA: <span id="__eta"></span></b></div>'
 		);
 	var weekly = $('#__w_tgt'),
