@@ -7,7 +7,7 @@
  *
  * @package   harvest-bookmarklet-dailytarget
  * @author    Stéphane Lavergne <https://github.com/vphantom/>
- * @copyright 2018-2020 Stéphane Lavergne
+ * @copyright 2018-2021 Stéphane Lavergne
  * @license   https://opensource.org/licenses/MIT  MIT
  */
 (function() {
@@ -53,7 +53,9 @@
 		var weeklyVal =
 				Number(weekly.val()) -
 				Number($('#day-view-week-nav-total .test-week-total').text()) +
-				Number($('.day-view-week-nav .is-today span').text()),
+				Number(
+					$('.day-view-week-nav .is-today .time-day-total').text()
+				),
 			now = new Date(),
 			weekDaysLeft =
 				1 +
