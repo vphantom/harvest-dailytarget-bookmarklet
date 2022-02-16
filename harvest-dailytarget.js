@@ -53,7 +53,7 @@
 		var weeklyVal =
 				Number(weekly.val()) -
 				Number($('#day-view-week-nav-total .test-week-total').text()) +
-				Number($('.is-today .time-day-total').text()),
+				Number($('.is-today .pds-text-sm').text()),
 			now = new Date(),
 			weekDaysLeft =
 				1 +
