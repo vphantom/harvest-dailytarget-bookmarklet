@@ -35,7 +35,7 @@
 	// Update ETA on daily input change and periodically
 	var update_eta = function() {
 		var dailyVal = Number(daily.val()),
-			done = Number($('.is-today .time-day-total').text()),
+			done = Number($('.is-today .pds-text-sm').text()),
 			delta = Math.max(0, dailyVal - done),
 			eta = new Date(new Date().getTime() + delta * 3600000),
 			etaTxt =
