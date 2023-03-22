@@ -41,8 +41,9 @@
 		var dailyVal = Number(daily.val()),
 			done = Number($('.is-today .pds-text-sm').text()),
 			delta = Math.max(0, dailyVal - done),
+			mdelta = Math.max(0, dailyVal * min_ratio - done),
 			eta = new Date(new Date().getTime() + delta * 3600000),
-			meta = new Date(new Date().getTime() + delta * min_ratio * 3600000);
+			meta = new Date(new Date().getTime() + mdelta * 3600000);
 		etas.html(
 			delta.toFixed(2) +
 				'h until ' +
@@ -52,7 +53,7 @@
 				eta.getMinutes()
 		);
 		metas.html(
-			(delta * min_ratio).toFixed(2) +
+			mdelta.toFixed(2) +
 				'h until ' +
 				meta.getHours() +
 				':' +
