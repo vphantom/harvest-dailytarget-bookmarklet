@@ -41,9 +41,7 @@
 		var dailyVal = Number(daily.val()),
 			done = Number($('.is-today .pds-text-sm').text()),
 			delta = Math.max(0, dailyVal - done),
-			mdelta = Math.max(0, dailyVal * min_ratio - done),
-			eta = new Date(new Date().getTime() + delta * 3600000),
-			meta = new Date(new Date().getTime() + mdelta * 3600000);
+			eta = new Date(new Date().getTime() + delta * 3600000);
 		etas.html(
 			delta.toFixed(2) +
 				'h until ' +
@@ -52,6 +50,20 @@
 				(eta.getMinutes() < 10 ? '0' : '') +
 				eta.getMinutes()
 		);
+		var mdone = 0;
+		$('table#day-view-entries tr.day-view-entry').each(function() {
+			var note = $(this)
+					.find('div.entry-details div.notes')
+					.text(),
+				done = Number(
+					$(this)
+						.find('td.entry-time')
+						.text()
+				);
+			mdone += /#min/.test(note) ? done / min_ratio : done;
+		});
+		var mdelta = Math.max(0, (dailyVal - mdone) * min_ratio),
+			meta = new Date(new Date().getTime() + mdelta * 3600000);
 		metas.html(
 			mdelta.toFixed(2) +
 				'h until ' +
