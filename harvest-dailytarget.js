@@ -13,8 +13,34 @@
 /* eslint-env browser, jquery */
 (function() {
 	var hours_per_week = 37.5,
-		days_per_week = 5,
-		min_ratio = 3 / 5;
+		days_per_week = 5;
+
+	function output(hrs) {
+		// In a day, 90-minute blocks have decreasing productivity output.
+		var block_size = 1.5;
+		var block_outputs = [1.75, 1.75, 1.5, 0.5, 0.33, 0.25, 0.25, 0.25];
+		if (hrs > 12) return 0;
+		var out = 0;
+		block_outputs.forEach(function(bo, i) {
+			var todo = block_size * i;
+			if (hrs > todo) {
+				out += Math.min(block_size, hrs - todo) * bo;
+			}
+		});
+		return out;
+	}
+
+	function input(hrs) {
+		// Guess based reciprocal of output().
+		if (hrs >= 9.87) return 0; // output(8*1.5) = 9.87
+		var guess = hrs / 2;
+		var diff = hrs - output(guess);
+		while (Math.abs(diff) > 0.01) {
+			guess = guess * (diff > 0 ? 1.5 : 0.5);
+			diff = hrs - output(guess);
+		}
+		return guess;
+	}
 
 	// Create input for target hours
 	$('.js-timesheet-view')
@@ -29,7 +55,7 @@
 				'" min="1" max="7" step="1">' +
 				' D:<input title="Daily hours" type="number" id="__d_tgt" min="0" max="24" step="0.01">' +
 				' <b style="font-size:150%;margin-left:1em">ETA: <span id="__eta"></span></b>' +
-				'<br>(<i>min: <span id="__meta"></span></i>)</div>'
+				'<br>(<i>#min: <span id="__meta"></span></i>)</div>'
 		);
 	var weekly = $('#__w_tgt'),
 		weekDays = $('#__w_l'),
@@ -50,7 +76,8 @@
 				(eta.getMinutes() < 10 ? '0' : '') +
 				eta.getMinutes()
 		);
-		var mdone = 0;
+		var mdone = 0,
+			sdone = 0;
 		$('table#day-view-entries tr.day-view-entry').each(function() {
 			var note = $(this)
 					.find('div.entry-details div.notes')
@@ -60,9 +87,9 @@
 						.find('td.entry-time')
 						.text()
 				);
-			mdone += /#min/.test(note) ? done / min_ratio : done;
+			/#min/.test(note) ? (mdone += done) : (sdone += done);
 		});
-		var mdelta = Math.max(0, (dailyVal - mdone) * min_ratio),
+		var mdelta = Math.max(0, input(dailyVal - sdone) - mdone),
 			meta = new Date(new Date().getTime() + mdelta * 3600000);
 		metas.html(
 			mdelta.toFixed(2) +
@@ -70,7 +97,11 @@
 				meta.getHours() +
 				':' +
 				(meta.getMinutes() < 10 ? '0' : '') +
-				meta.getMinutes()
+				meta.getMinutes() +
+				' ' +
+				Math.round((output(mdone) / mdone + Number.EPSILON) * 100) /
+					100 +
+				'x so far'
 		);
 	};
 	setInterval(update_eta, 2000);
