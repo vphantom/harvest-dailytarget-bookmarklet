@@ -19,7 +19,7 @@
 		// In a day, 90-minute blocks have decreasing productivity output.
 		var block_size = 1.5;
 		var block_outputs = [1.75, 1.75, 1.5, 0.5, 0.33, 0.25, 0.25, 0.25];
-		if (hrs > 12) return 0;
+		if (hrs < 0.01 || hrs > 12) return 0;
 		var out = 0;
 		block_outputs.forEach(function(bo, i) {
 			var todo = block_size * i;
@@ -32,15 +32,23 @@
 
 	function input(hrs) {
 		// Guess based reciprocal of output().
-		if (hrs >= 9.87) return 0; // output(8*1.5) = 9.87
+		if (hrs < 0.01 || hrs >= 9.87) return 0; // output(8*1.5) = 9.87
 		var guess = hrs / 2;
 		var diff = hrs - output(guess);
-		while (Math.abs(diff) > 0.01) {
-			guess = guess * (diff > 0 ? 1.5 : 0.5);
+		var i = 0;
+		while (i < 100 && Math.abs(diff) > 0.01) {
+			i++;
+			guess = guess + diff / 2;
 			diff = hrs - output(guess);
 		}
+		if (i >= 100) return 0; // Fail-safe in case something goes horribly wrong
 		return guess;
 	}
+
+	// Inject CSS
+	$('head').append(
+		'<style type="text/css">td.entry-time:after{content:attr(title);color:#888;font-size:67%;position:absolute;right:17px;top:60%;}</style>'
+	);
 
 	// Create input for target hours
 	$('.js-timesheet-view')
@@ -90,7 +98,10 @@
 			/#min/.test(note) ? (mdone += done) : (sdone += done);
 		});
 		var mdelta = Math.max(0, input(dailyVal - sdone) - mdone),
-			meta = new Date(new Date().getTime() + mdelta * 3600000);
+			meta = new Date(new Date().getTime() + mdelta * 3600000),
+			ratio =
+				Math.round((output(mdone) / mdone + Number.EPSILON) * 100) /
+				100;
 		metas.html(
 			mdelta.toFixed(2) +
 				'h until ' +
@@ -99,10 +110,27 @@
 				(meta.getMinutes() < 10 ? '0' : '') +
 				meta.getMinutes() +
 				' ' +
-				Math.round((output(mdone) / mdone + Number.EPSILON) * 100) /
-					100 +
+				ratio +
 				'x so far'
 		);
+		$('table#day-view-entries tr.day-view-entry').each(function() {
+			var note = $(this)
+				.find('div.entry-details div.notes')
+				.text();
+			done = Number(
+				$(this)
+					.find('td.entry-time')
+					.text()
+			);
+			if (/#min/.test(note)) {
+				$(this)
+					.find('td.entry-time')
+					.attr(
+						'title',
+						Math.round((done * ratio + Number.EPSILON) * 100) / 100
+					);
+			}
+		});
 	};
 	setInterval(update_eta, 2000);
 	daily.on('input change', update_eta);
