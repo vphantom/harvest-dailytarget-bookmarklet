@@ -64,13 +64,16 @@
 				'" min="1" max="7" step="1">' +
 				' D:<input title="Daily hours" type="number" id="__d_tgt" min="0" max="24" step="0.01">' +
 				' <b style="font-size:150%;margin-left:1em">ETA: <span id="__eta"></span></b>' +
-				'<br>(<i>#est: <span id="__meta"></span></i>)</div>'
+				'<br>(<i>#est: <span id="__meta"></span></i> <a id="__pause">pause</a>)</div>'
 		);
 	var weekly = $('#__w_tgt'),
 		weekDays = $('#__w_l'),
 		daily = $('#__d_tgt'),
 		etas = $('#__eta'),
-		metas = $('#__meta');
+		metas = $('#__meta'),
+		pause = $('#__pause'),
+		running = true,
+		ratio = 1;
 	// Update ETA on daily input change and periodically
 	var update_eta = function() {
 		var dailyVal = Number(daily.val()),
@@ -85,6 +88,7 @@
 				(eta.getMinutes() < 10 ? '0' : '') +
 				eta.getMinutes()
 		);
+
 		var mdone = 0,
 			sdone = 0;
 		$('table#day-view-entries tr.day-view-entry').each(function() {
@@ -99,10 +103,12 @@
 			/#est/.test(note) ? (mdone += done) : (sdone += done);
 		});
 		var mdelta = Math.max(0, input(dailyVal - sdone) - mdone),
-			meta = new Date(new Date().getTime() + mdelta * 3600000),
+			meta = new Date(new Date().getTime() + mdelta * 3600000);
+		if (running) {
 			ratio =
 				Math.round((output(mdone) / mdone + Number.EPSILON) * 100) /
 				100;
+		}
 		metas.html(
 			mdelta.toFixed(2) +
 				'h until ' +
@@ -134,6 +140,9 @@
 		});
 	};
 	setInterval(update_eta, 2000);
+	pause.on('click', function() {
+		running = !running;
+	});
 	daily.on('input change', update_eta);
 
 	// Update daily input on weekly input change
