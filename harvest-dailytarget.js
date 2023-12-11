@@ -4,6 +4,7 @@
  * Adds number inputs for weekly/daily target hours.
  * Updates daily target based on days left and weekly objective.
  * Shows hours left today and ETA near total.
+ * Estimates current-day productivity and equivalent target.
  *
  * @package   harvest-bookmarklet-dailytarget
  * @author    Stéphane Lavergne <https://github.com/vphantom/>
@@ -63,7 +64,7 @@
 				'" min="1" max="7" step="1">' +
 				' D:<input title="Daily hours" type="number" id="__d_tgt" min="0" max="24" step="0.01">' +
 				' <b style="font-size:150%;margin-left:1em">ETA: <span id="__eta"></span></b>' +
-				'<br>(<i>#min: <span id="__meta"></span></i>)</div>'
+				'<br>(<i>#est: <span id="__meta"></span></i>)</div>'
 		);
 	var weekly = $('#__w_tgt'),
 		weekDays = $('#__w_l'),
@@ -95,7 +96,7 @@
 						.find('td.entry-time')
 						.text()
 				);
-			/#min/.test(note) ? (mdone += done) : (sdone += done);
+			/#est/.test(note) ? (mdone += done) : (sdone += done);
 		});
 		var mdelta = Math.max(0, input(dailyVal - sdone) - mdone),
 			meta = new Date(new Date().getTime() + mdelta * 3600000),
@@ -122,7 +123,7 @@
 					.find('td.entry-time')
 					.text()
 			);
-			if (/#min/.test(note)) {
+			if (/#est/.test(note)) {
 				$(this)
 					.find('td.entry-time')
 					.attr(
